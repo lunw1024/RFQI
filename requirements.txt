@@ -1,6 +1,9 @@
 tensorboard
 imageio
 stable-baselines3
-gym
+gymnasium[mujoco]
+mujoco-py
 numpy
 torch
+sustaingym[ev]
+scipy

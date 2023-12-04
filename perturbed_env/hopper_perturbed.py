@@ -1,8 +1,8 @@
 __credits__ = ["Rushiv Arora"]
 
 import numpy as np
-from gym.envs.mujoco import mujoco_env
-from gym import utils
+from gymnasium.envs.mujoco import mujoco_env
+from gymnasium import utils
 from typing import Optional, List, Tuple
 
 

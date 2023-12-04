@@ -1,6 +1,6 @@
 import argparse
-import gym
-from gym import spaces
+import gymnasium as gym
+from gymnasium import spaces
 import numpy as np
 import os
 import torch
@@ -108,7 +108,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                 episode_reward = 0.0
                 while not done:
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                 # episode done
                 rewards.append(episode_reward)
@@ -143,7 +144,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                 episode_reward = 0.0
                 while not done:
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                 # episode done
                 rewards.append(episode_reward)
@@ -180,7 +182,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                 episode_reward = 0.0
                 while not done:
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                 # episode done
                 rewards.append(episode_reward)
@@ -216,7 +219,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         action = env.action_space.sample()
                     else: # else we use policy
                         action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                 # episode done
                 rewards.append(episode_reward)
@@ -293,7 +297,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                     
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -353,7 +358,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                     if i == 0: # save video
                         images.append(img)
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     if i == 0: # save video
                         img = env.render(mode='rgb_array')
@@ -414,7 +420,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -475,7 +482,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -539,7 +547,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -594,7 +603,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         action = env.action_space.sample()
                     else: # else we use policy
                         action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -658,7 +668,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                     
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     if i == 0: # save video
                         img = env.render(mode='rgb_array')
@@ -705,7 +716,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -752,7 +764,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -800,7 +813,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -845,7 +859,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -891,7 +906,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                     
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     if i == 0: # save video
                         img = env.render(mode='rgb_array')
@@ -936,7 +952,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -981,7 +998,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         action = env.action_space.sample()
                     else: # else we use policy
                         action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -1044,7 +1062,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                     if i == 0: # save video
                         images.append(img)
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     if i == 0: # save video
                         img = env.render(mode='rgb_array')
@@ -1099,7 +1118,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -1154,7 +1174,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -1199,7 +1220,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                     if i == 0: # save video
                         images.append(img)
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -1244,7 +1266,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -1288,7 +1311,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                     if i == 0: # save video
                         images.append(img)
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -1334,7 +1358,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         images.append(img)
                         
                     action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video
@@ -1379,7 +1404,8 @@ def eval_rfqi(state_dim, action_dim, min_action, max_action, hard, paths,
                         action = env.action_space.sample()
                     else: # else we use policy
                         action = predict(policy, state, env_action_type)
-                    state, reward, done, _ = env.step(action)
+                    state, reward, terminated, truncated, _ = env.step(action)
+                    done = terminated or truncated
                     episode_reward += reward
                     
                     if i == 0: # save video

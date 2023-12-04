@@ -1,7 +1,7 @@
 import numpy as np
 from stable_baselines3 import PPO, SAC, DQN, TD3
-import gym
-from gym import spaces
+import gymnasium as gym
+from gymnasium import spaces
 from data_container import DATA
 import os
 import argparse
@@ -68,7 +68,7 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
     # generate dateset
     count = 0
     while count < buffer_size:
-        state, done = env.reset(), False
+        state, done = env.reset()
         if verbose:
             print(f'buffer size={buffer_size}======current count={count}')
         while not done:
@@ -78,7 +78,8 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
                 action, _ = policy.predict(state)
                 if 'FrozenLake' in env_name:
                     action = int(action)
-            next_state, reward, done, _ = env.step(action)
+            next_state, reward, terminated, truncated, _ = env.step(action)
+            done = terminated or truncated
             states.append(state)
             # determine the correct data structure for action
             if env_action_type == 'continuous' or env_action_type == 'discrete':
@@ -88,7 +89,7 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
             else:
                 raise NotImplementedError
                 
-            if np.random.binomial(n=1, p=0.001):
+            if np.random.binomial(n=1, p=0.0001):
                 print('==================================================')
                 print('--------random printing offline data point--------')
                 print(f'action: {action}')

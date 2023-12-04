@@ -1,10 +1,10 @@
 import numpy as np
 import torch
 import time
-import gym
+import gymnasium as gym
+from gymnasium import spaces
 import os
 import imageio
-from gym import spaces
 import argparse
 from torch.utils.tensorboard import SummaryWriter
 

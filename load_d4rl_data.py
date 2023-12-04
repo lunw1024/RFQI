@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import d4rl
 import os
 import numpy as np
