@@ -2,6 +2,7 @@ import numpy as np
 from stable_baselines3 import PPO, SAC, DQN, TD3
 import gymnasium as gym
 from gymnasium import spaces
+from sustaingym.envs.building import BuildingEnv, ParameterGenerator
 from data_container import DATA
 import os
 import argparse
@@ -49,7 +50,11 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
         raise NotImplementedError
         
     # prep. environment
-    env = gym.make(env_name)
+    parameters=ParameterGenerator(
+    'OfficeSmall','Hot_Dry','Tucson', time_res=300)
+    env = BuildingEnv(parameters)
+    env.reset()
+    numofhours=24
     env_action_type = get_action_type(env.action_space)
         
     data = DATA(state_dim, action_dim, 'cpu', buffer_size)
@@ -121,12 +126,12 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
     data.ptr = buffer_size
     data.save(dataset_name)
 
-     
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     # gymnasium environment name (need to be consistent with the dataset name)
-    parser.add_argument("--env", default='CartPole-v1')
+    # parser.add_argument("--env", default='CartPole-v1')
     # e-mix (prob. to mix random actions)
     parser.add_argument("--eps", default=0.5, type=float)
     parser.add_argument("--buffer_size", default=1e6, type=float)
@@ -136,14 +141,16 @@ if __name__ == "__main__":
     # if gendata_pol is trained with mixed traj.
     parser.add_argument("--mixed", default='False', type=str)
     args = parser.parse_args()
-    
+
     if args.verbose == 'False':
         verbose = False
     else:
         verbose = True
-        
+
     # determine dimensions
-    env = gym.make(args.env)
+    parameters=ParameterGenerator(
+    'OfficeSmall','Hot_Dry','Tucson', time_res=300)
+    env = BuildingEnv(parameters)
     env_action_type = get_action_type(env.action_space)
     if env_action_type == 'continuous':
         action_dim = 1

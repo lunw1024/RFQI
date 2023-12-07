@@ -5,5 +5,5 @@ gymnasium[mujoco]
 mujoco-py
 numpy
 torch
-sustaingym[ev]
+sustaingym
 scipy
