@@ -33,22 +33,25 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
     # determine trained policy save path and where to save dataset
     if args.mixed == 'True':
         dataset_name = f'./offline_data/{env_name}_{gendata_pol}_mixed_e{epsilon}'
-        policy_path = f'./models/{gendata_pol}_mixed_{env_name}'
     else:
         dataset_name = f'./offline_data/{env_name}_{gendata_pol}_e{epsilon}'
-        policy_path = f'./models/{gendata_pol}_{env_name}'
     
-    if gendata_pol == 'ppo':
-        policy = PPO.load(policy_path, device=args.device)
-    elif gendata_pol == 'sac':
-        policy = SAC.load(policy_path, device=args.device)
-    elif gendata_pol == 'dqn':
-        policy = DQN.load(policy_path, device=args.device)
-    elif gendata_pol == 'td3':
-        policy = TD3.load(policy_path, device=args.device)
-    else:
-        raise NotImplementedError
-        
+    if gendata_pol != 'random':
+        if args.mixed == 'True':
+            policy_path = f'./models/{gendata_pol}_mixed_{env_name}'
+        else:
+            policy_path = f'./models/{gendata_pol}_{env_name}'
+        if gendata_pol == 'ppo':
+            policy = PPO.load(policy_path, device=args.device)
+        elif gendata_pol == 'sac':
+            policy = SAC.load(policy_path, device=args.device)
+        elif gendata_pol == 'dqn':
+            policy = DQN.load(policy_path, device=args.device)
+        elif gendata_pol == 'td3':
+            policy = TD3.load(policy_path, device=args.device)
+        else:
+            raise NotImplementedError
+
     # prep. environment
     parameters=ParameterGenerator(
     'OfficeSmall','Hot_Dry','Tucson', time_res=300)
@@ -56,7 +59,7 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
     env.reset()
     numofhours=24
     env_action_type = get_action_type(env.action_space)
-        
+
     data = DATA(state_dim, action_dim, 'cpu', buffer_size)
     states = []
     actions = []
@@ -73,11 +76,12 @@ def generate_dataset(env_name, gendata_pol, epsilon, state_dim, action_dim,
     # generate dateset
     count = 0
     while count < buffer_size:
-        state, done = env.reset()
+        state, info = env.reset()
+        done = False
         if verbose:
             print(f'buffer size={buffer_size}======current count={count}')
         while not done:
-            if np.random.binomial(n=1, p=epsilon):
+            if gendata_pol == 'random' or np.random.binomial(n=1, p=epsilon): # DEBUG
                 action = env.action_space.sample()
             else: # else we select expert action
                 action, _ = policy.predict(state)
@@ -131,7 +135,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     # gymnasium environment name (need to be consistent with the dataset name)
-    # parser.add_argument("--env", default='CartPole-v1')
+    parser.add_argument("--env", default='BuildingEnv-v0')
     # e-mix (prob. to mix random actions)
     parser.add_argument("--eps", default=0.5, type=float)
     parser.add_argument("--buffer_size", default=1e6, type=float)
@@ -141,6 +145,8 @@ if __name__ == "__main__":
     # if gendata_pol is trained with mixed traj.
     parser.add_argument("--mixed", default='False', type=str)
     args = parser.parse_args()
+
+    assert args.env == 'BuildingEnv-v0', "Env not supported"
 
     if args.verbose == 'False':
         verbose = False

@@ -1,7 +1,7 @@
 tensorboard
 imageio
 stable-baselines3
-gymnasium[mujoco]
+gymnasium
 mujoco-py
 numpy
 torch
